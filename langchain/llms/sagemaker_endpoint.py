@@ -11,7 +11,6 @@ from langchain.llms.utils import enforce_stop_tokens
 INPUT_TYPE = TypeVar("INPUT_TYPE", bound=Union[str, List[str]])
 OUTPUT_TYPE = TypeVar("OUTPUT_TYPE", bound=Union[str, List[List[float]]])
 
-
 class ContentHandlerBase(Generic[INPUT_TYPE, OUTPUT_TYPE]):
     """A handler class to transform input from LLM to a
     format that SageMaker endpoint expects. Similarily,
@@ -51,7 +50,7 @@ class ContentHandlerBase(Generic[INPUT_TYPE, OUTPUT_TYPE]):
         """
 
     @abstractmethod
-    def transform_output(self, output: bytes) -> OUTPUT_TYPE:
+    def transform_output(self, output: bytes, prompt: Optional[INPUT_TYPE] = None) -> OUTPUT_TYPE:
         """Transforms the output from the model to string that
         the LLM class expects.
         """
@@ -241,7 +240,7 @@ class SagemakerEndpoint(LLM):
         except Exception as e:
             raise ValueError(f"Error raised by inference endpoint: {e}")
 
-        text = self.content_handler.transform_output(response["Body"])
+        text = self.content_handler.transform_output(response["Body"], prompt)
         if stop is not None:
             # This is a bit hacky, but I can't figure out a better way to enforce
             # stop tokens when making calls to the sagemaker endpoint.
