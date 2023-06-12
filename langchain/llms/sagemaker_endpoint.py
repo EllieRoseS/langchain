@@ -243,7 +243,7 @@ class SagemakerEndpoint(LLM):
         except Exception as e:
             raise ValueError(f"Error raised by inference endpoint: {e}")
 
-        text = self.content_handler.transform_output(response["Body"])
+        text = self.content_handler.transform_output(response["Body"], prompt)
 
         if stop is not None:
             # This is a bit hacky, but I can't figure out a better way to enforce
