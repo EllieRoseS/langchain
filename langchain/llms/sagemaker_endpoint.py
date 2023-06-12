@@ -11,6 +11,7 @@ from langchain.llms.utils import enforce_stop_tokens
 INPUT_TYPE = TypeVar("INPUT_TYPE", bound=Union[str, List[str]])
 OUTPUT_TYPE = TypeVar("OUTPUT_TYPE", bound=Union[str, List[List[float]]])
 
+
 class ContentHandlerBase(Generic[INPUT_TYPE, OUTPUT_TYPE]):
     """A handler class to transform input from LLM to a
     format that SageMaker endpoint expects. Similarily,
@@ -50,7 +51,9 @@ class ContentHandlerBase(Generic[INPUT_TYPE, OUTPUT_TYPE]):
         """
 
     @abstractmethod
-    def transform_output(self, output: bytes, prompt: Optional[str] = None) -> OUTPUT_TYPE:
+    def transform_output(
+        self, output: bytes, prompt: Optional[str] = None
+    ) -> OUTPUT_TYPE:
         """Transforms the output from the model to string that
         the LLM class expects.
         """
